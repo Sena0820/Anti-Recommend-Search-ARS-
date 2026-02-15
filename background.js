@@ -133,10 +133,11 @@ function analyzeResultInBackground(result, html, strength) {
     if (/会社概要|企業情報|corporate/i.test(html)) brandScore += 1;
 
     // Rank Penalty
-    const rankPenalty = Math.max(0, 20 - result.rank);
+    const rankPenalty = Math.max(0, 10 - result.rank);
 
-    // AntiScore
-    const antiScore = (personalScore * 3) - (seoScore * 2) - (adScore * 2) - (brandScore * 3) - rankPenalty;
+    // AntiScore (0-100, 50が中立)
+    const rawScore = 50 + (personalScore * 3) - (seoScore * 2) - (adScore * 2) - (brandScore * 3) - rankPenalty;
+    const antiScore = Math.max(0, Math.min(100, rawScore));
 
     // 判定理由
     const reasons = [];

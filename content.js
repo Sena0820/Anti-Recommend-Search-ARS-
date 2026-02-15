@@ -111,16 +111,16 @@
 
     // ── スコアに応じた色 ──
     function getScoreColor(score) {
-        if (score >= 20) return '#10b981';
-        if (score >= 0) return '#f59e0b';
-        return '#ef4444';
+        if (score >= 65) return '#10b981';  // 個人的 → 緑
+        if (score >= 40) return '#f59e0b';  // 中立 → 黄
+        return '#ef4444';                   // 商業的 → 赤
     }
 
     // ── スコアバッジ ──
     function getScoreLabel(score) {
-        if (score >= 30) return '⭐ 超個人的';
-        if (score >= 15) return '✨ 個人的';
-        if (score >= 0) return '🔍 中立';
+        if (score >= 75) return '⭐ 超個人的';
+        if (score >= 60) return '✨ 個人的';
+        if (score >= 40) return '🔍 中立';
         return '🏢 商業寄り';
     }
 
@@ -297,8 +297,8 @@
                 });
 
                 const reasons = [];
-                if (personalScore > 3) reasons.push(`一人称表現 多め (${personalScore.toFixed(1)})`);
-                if (seoScore < 2) reasons.push('SEOワード含有率 低');
+                if (personalScore > 3) reasons.push(`一人称表現あり (${personalScore.toFixed(1)})`);
+                if (seoScore < 2) reasons.push('SEOワード 少');
                 else if (seoScore > 5) reasons.push(`SEOワード多数 (${seoScore.toFixed(1)})`);
                 reasons.push('アフィリエイト 未解析（ローカルモード）');
                 if (brandScore < 2) reasons.push('独自ドメイン');

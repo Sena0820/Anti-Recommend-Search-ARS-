@@ -11,8 +11,8 @@ const ARS = (() => {
         'store.line.me', 'qoo10.jp', 'au-commerce.jp',
         // 百科事典・Wiki
         'wikipedia.org', 'wikiwand.com', 'weblio.jp', 'kotobank.jp',
-        // テック・開発者向け大手
-        'note.com', 'qiita.com', 'zenn.dev', 'teratail.com',
+        // テック・開発者向け大手（Qiita/ZennはSEO強めなので維持、Noteは個人も多いが商業も多い…一旦解除してスコアで判断）
+        'qiita.com', 'zenn.dev', 'teratail.com',
         // ポータル・検索
         'yahoo.co.jp', 'yahoo.com', 'msn.com', 'bing.com',
         // 価格比較・口コミ
@@ -43,10 +43,10 @@ const ARS = (() => {
         'twitter.com', 'x.com', 'facebook.com', 'instagram.com',
         'youtube.com', 'tiktok.com', 'linkedin.com', 'pinterest.com',
         'threads.net', 'reddit.com',
-        // ブログプラットフォーム（大手）
-        'ameblo.jp', 'fc2.com', 'hatena.ne.jp', 'hatenablog.com',
-        'hatenablog.jp', 'seesaa.net', 'blog.jp', 'livedoor.blog',
-        'exblog.jp',
+        // ブログプラットフォーム（大手だが個人ブログの宝庫なので除外しない）
+        // 'ameblo.jp', 'fc2.com', 'hatena.ne.jp', 'hatenablog.com',
+        // 'hatenablog.jp', 'seesaa.net', 'blog.jp', 'livedoor.blog',
+        // 'exblog.jp', 'note.com',
         // レシピ・生活
         'cookpad.com', 'delishkitchen.tv', 'kurashiru.com',
         // 健康・美容
@@ -141,13 +141,19 @@ const ARS = (() => {
 
     // ── ドメイン名に含まれる商業キーワード ──
     const COMMERCIAL_DOMAIN_KEYWORDS = [
-        'shop', 'store', 'mall', 'buy', 'market',
-        'hotel', 'travel', 'tour', 'booking', 'reserve',
-        'navi', 'guide', 'hikaku', 'compare', 'search',
-        'job', 'career', 'recruit', 'agent',
-        'news', 'media', 'press', 'times',
-        'clinic', 'salon', 'beauty',
-        'estate', 'realty', 'fudosan',
+        'mall', 'market', 'auction', // shop, storeは個人商店にも使われるので削除
+        'search', 'price', 'compare', 'hikaku', 'navi',
+        'news', 'press', // mediaは個人でも使う
+        'recruit', 'career', 'job', 'agent',
+        'corp', 'inc', 'official', // 企業・公式
+    ];
+
+    // ── レトロ・個人サイトパターン（加点要素） ──
+    const INDIE_URL_PATTERNS = [
+        /~[a-zA-Z0-9]+/,   // チルダ（ユーザーディレクトリ）
+        /\.html?$/,        // 静的HTML
+        /cgi-bin/,         // CGI
+        /diary/, /profile/, /link/, // 個人サイトによくあるパス
     ];
 
     // ────────────────────────────────
@@ -240,6 +246,13 @@ const ARS = (() => {
             if (pattern.test(url)) {
                 score += 2;
                 break;
+            }
+        }
+
+        // レトロ・個人サイトボーナス（ブランドスコアからは減算＝個人の可能性アップ）
+        for (const pattern of INDIE_URL_PATTERNS) {
+            if (pattern.test(url)) {
+                score -= 2; // 個人度アップ
             }
         }
 

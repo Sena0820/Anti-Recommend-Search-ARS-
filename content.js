@@ -117,11 +117,19 @@
     }
 
     // ── スコアバッジ ──
-    function getScoreLabel(score) {
-        if (score >= 75) return '⭐ 超個人的';
-        if (score >= 60) return '✨ 個人的';
+    function getScoreLabel(item) {
+        const score = item.antiScore;
+        // 特別な判定: 個人商店の可能性（個人性が高く、かつショップ系キーワードがある）
+        const isShop = /shop|store|cart|base|stores\.jp/i.test(item.url) || item.commercialIndex > 30;
+        if (score >= 50 && isShop) return '🛒 個人商店?';
+
+        // ブログ判定
+        if (/blog|diary|note|ameblo|hatena/i.test(item.url)) return '📝 ブログ';
+
+        if (score >= 75) return '💎 お宝発見';
+        if (score >= 60) return '✨ かなり個人的';
         if (score >= 40) return '🔍 中立';
-        return '🏢 商業寄り';
+        return '🏢 商業/公式';
     }
 
     // ── ゲージ ──
@@ -141,12 +149,15 @@
     // ── 結果カード生成 ──
     function createResultCard(item, index) {
         const scoreColor = getScoreColor(item.antiScore);
-        const label = getScoreLabel(item.antiScore);
+        const label = getScoreLabel(item);
         const personalPct = item.personalIndex || 0;
         const commercialPct = item.commercialIndex || 0;
 
         const card = document.createElement('div');
         card.className = 'ars-card';
+        if (label.includes('💎')) {
+            card.classList.add('ars-card-treasure');
+        }
         card.style.animationDelay = `${index * 0.05}s`;
 
         // URLをエスケープ

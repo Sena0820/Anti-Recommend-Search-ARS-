@@ -84,9 +84,11 @@ const BLACKLIST_DOMAINS = [
     'amazon.co.jp', 'amazon.com', 'rakuten.co.jp', 'rakuten.com',
     'mercari.com', 'zozo.jp', 'shopping.yahoo.co.jp', 'qoo10.jp',
     'wikipedia.org', 'wikiwand.com', 'weblio.jp', 'kotobank.jp',
-    'note.com', 'qiita.com', 'zenn.dev', 'teratail.com',
+    // テック・開発者向け大手（Qiita/ZennはSEO強めなので維持、Noteは個人も多いが商業も多い…一旦解除してスコアで判断）
+    'qiita.com', 'zenn.dev', 'teratail.com',
+    // ポータル・検索
     'yahoo.co.jp', 'yahoo.com', 'msn.com',
-    'kakaku.com', 'cosme.net', 'mybest.com', 'the360.life', 'rentry.jp',
+    // 価格比較・口コミ
     'tabelog.com', 'hotpepper.jp', 'gnavi.co.jp', 'retty.me',
     'hitosara.com', 'ubereats.com', 'demae-can.com',
     'jalan.net', 'booking.com', 'trivago.jp', 'ikyu.com',
@@ -103,7 +105,7 @@ const BLACKLIST_DOMAINS = [
     'twitter.com', 'x.com', 'facebook.com', 'instagram.com',
     'youtube.com', 'tiktok.com', 'linkedin.com', 'pinterest.com',
     'ameblo.jp', 'fc2.com', 'hatena.ne.jp', 'hatenablog.com',
-    'hatenablog.jp', 'seesaa.net', 'exblog.jp',
+    // 'hatenablog.jp', 'seesaa.net', 'exblog.jp', // ブログは除外しない
     'cookpad.com', 'delishkitchen.tv', 'kurashiru.com',
     'hotpepper-beauty.com', 'dmm.com', 'nifty.com',
     'biglobe.ne.jp', 'goo.ne.jp', 'excite.co.jp',
@@ -118,12 +120,19 @@ const COMMERCIAL_PATH_PATTERNS = [
 ];
 
 const COMMERCIAL_DOMAIN_KEYWORDS = [
-    'shop', 'store', 'mall', 'buy', 'market',
-    'hotel', 'travel', 'tour', 'booking', 'reserve',
-    'navi', 'guide', 'hikaku', 'compare', 'search',
-    'job', 'career', 'recruit', 'agent',
-    'news', 'media', 'press', 'times',
-    'clinic', 'salon', 'beauty', 'estate', 'fudosan',
+    'mall', 'market', 'auction', // shop, store削除
+    'search', 'price', 'compare', 'hikaku', 'navi',
+    'news', 'press', // media削除
+    'recruit', 'career', 'job', 'agent',
+    'corp', 'inc', 'official',
+];
+
+// ── レトロ・個人サイトパターン（加点要素） ──
+const INDIE_URL_PATTERNS = [
+    /~[a-zA-Z0-9]+/,   // チルダ
+    /\.html?$/,        // 静的HTML
+    /cgi-bin/,         // CGI
+    /diary/, /profile/, /link/,
 ];
 
 function extractDomain(url) {
@@ -176,6 +185,11 @@ function analyzeResultInBackground(result, html, strength) {
     // URLパスに商業パターン
     for (const pattern of COMMERCIAL_PATH_PATTERNS) {
         if (pattern.test(result.url)) { brandScore += 2; break; }
+    }
+
+    // レトロ・個人サイトボーナス
+    for (const pattern of INDIE_URL_PATTERNS) {
+        if (pattern.test(result.url)) { brandScore -= 2; }
     }
 
     if (/プライバシーポリシー|privacy.?policy/i.test(html)) brandScore += 0.5;

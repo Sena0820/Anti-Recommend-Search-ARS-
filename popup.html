@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ARS Settings</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="popup-container">
+        <div class="popup-header">
+            <span class="popup-logo">🔮</span>
+            <h1>ARS</h1>
+            <p class="popup-subtitle">Anti-Recommend Search</p>
+        </div>
+
+        <div class="popup-section">
+            <div class="popup-toggle-row">
+                <label for="ars-enabled">拡張機能を有効化</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="ars-enabled" checked>
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="popup-section">
+            <label class="popup-label">フィルタ強度</label>
+            <div class="popup-radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="strength" value="weak">
+                    <span class="radio-label">弱</span>
+                    <span class="radio-desc">個人・商業混合</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="strength" value="medium" checked>
+                    <span class="radio-label">中</span>
+                    <span class="radio-desc">バランス型</span>
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="strength" value="strong">
+                    <span class="radio-label">強</span>
+                    <span class="radio-desc">個人のみ抽出</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="popup-section">
+            <label class="popup-label">ブラックリスト管理</label>
+            <p class="popup-hint">
+                Amazon, 楽天, Wikipedia, 大手ニュースサイト等を自動除外します。
+            </p>
+        </div>
+
+        <div class="popup-actions">
+            <button id="save-btn" class="btn-primary">保存</button>
+        </div>
+
+        <div id="status-msg" class="popup-status"></div>
+
+        <div class="popup-footer">
+            <span>v1.0.0</span>
+            <span>·</span>
+            <span>商業バイアス除去検索</span>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

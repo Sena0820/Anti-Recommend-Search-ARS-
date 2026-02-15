@@ -1,0 +1,276 @@
+/* =============================================================
+   Anti-Recommend Search (ARS) — Popup Styles
+   ============================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 320px;
+    font-family: 'Segoe UI', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif;
+    background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+    color: #e0e0e0;
+}
+
+.popup-container {
+    padding: 0;
+}
+
+/* ── ヘッダー ── */
+.popup-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px 20px 16px;
+    text-align: center;
+}
+
+.popup-logo {
+    font-size: 28px;
+    display: block;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.5));
+}
+
+.popup-header h1 {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    color: #fff;
+}
+
+.popup-subtitle {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 2px;
+}
+
+/* ── セクション ── */
+.popup-section {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.popup-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+/* ── トグルスイッチ ── */
+.popup-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.popup-toggle-row>label:first-child {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 24px;
+    transition: background 0.3s;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    bottom: 3px;
+    left: 3px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.toggle-switch input:checked+.toggle-slider {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+.toggle-switch input:checked+.toggle-slider::before {
+    transform: translateX(20px);
+}
+
+/* ── インプット ── */
+.popup-input-group {
+    display: flex;
+    gap: 6px;
+}
+
+.popup-input-group input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #e0e0e0;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.popup-input-group input:focus {
+    border-color: #667eea;
+}
+
+.popup-input-group input::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-icon {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    width: 36px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+    color: #e0e0e0;
+}
+
+.btn-icon:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.popup-hint {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 6px;
+}
+
+/* ── ラジオグループ ── */
+.popup-radio-group {
+    display: flex;
+    gap: 6px;
+}
+
+.radio-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 8px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.radio-option:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.radio-option input {
+    display: none;
+}
+
+.radio-option input:checked~.radio-label {
+    color: #667eea;
+}
+
+.radio-option input:checked~.radio-desc {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.radio-option:has(input:checked) {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.radio-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.2s;
+}
+
+.radio-desc {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.3);
+    margin-top: 2px;
+    transition: color 0.2s;
+}
+
+/* ── ボタン ── */
+.popup-actions {
+    padding: 14px 20px;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* ── ステータスメッセージ ── */
+.popup-status {
+    text-align: center;
+    font-size: 12px;
+    color: #10b981;
+    padding: 0 20px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s, padding 0.3s;
+}
+
+.popup-status.show {
+    max-height: 40px;
+    padding: 4px 20px 8px;
+}
+
+/* ── フッター ── */
+.popup-footer {
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.2);
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}

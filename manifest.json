@@ -1,0 +1,46 @@
+{
+    "manifest_version": 3,
+    "name": "Anti-Recommend Search (ARS)",
+    "version": "1.0.0",
+    "description": "商業バイアスを除去し、埋もれた個人コンテンツを発見する検索拡張機能",
+    "permissions": [
+        "activeTab",
+        "storage"
+    ],
+    "host_permissions": [
+        "*://www.google.com/*",
+        "*://www.google.co.jp/*"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://www.google.com/search*",
+                "*://www.google.co.jp/search*"
+            ],
+            "js": [
+                "anti_filter.js",
+                "content.js"
+            ],
+            "css": [
+                "content.css"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
+        }
+    },
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    }
+}

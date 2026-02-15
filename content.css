@@ -1,0 +1,388 @@
+/* =============================================================
+   Anti-Recommend Search (ARS) — Content Styles
+   Google検索ページ注入用スタイル
+   ============================================================= */
+
+/* ── サイドパネル ── */
+#ars-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 380px;
+  height: 100vh;
+  background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+  color: #e0e0e0;
+  z-index: 999999;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  font-family: 'Segoe UI', 'Hiragino Sans', 'Yu Gothic UI', 'Meiryo', sans-serif;
+  font-size: 13px;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: ars-slide-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+#ars-panel.ars-panel-hidden {
+  transform: translateX(100%);
+}
+
+@keyframes ars-slide-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+/* ── ヘッダー ── */
+.ars-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  flex-shrink: 0;
+}
+
+.ars-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ars-logo-icon {
+  font-size: 22px;
+  filter: drop-shadow(0 0 6px rgba(102, 126, 234, 0.6));
+  animation: ars-glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes ars-glow {
+  from { filter: drop-shadow(0 0 4px rgba(102, 126, 234, 0.4)); }
+  to   { filter: drop-shadow(0 0 10px rgba(118, 75, 162, 0.8)); }
+}
+
+.ars-logo-text {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 2px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.ars-logo-sub {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  margin-left: 2px;
+}
+
+.ars-close-btn {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  color: #fff;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.ars-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+/* ── ステータス ── */
+.ars-panel-status {
+  padding: 12px 16px;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ars-loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+}
+
+.ars-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: ars-spin 0.8s linear infinite;
+}
+
+@keyframes ars-spin {
+  to { transform: rotate(360deg); }
+}
+
+.ars-summary {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.ars-summary-count {
+  font-weight: 700;
+  font-size: 16px;
+  color: #667eea;
+}
+
+.ars-empty, .ars-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.ars-empty-icon, .ars-error-icon {
+  font-size: 20px;
+}
+
+/* ── 結果リスト ── */
+.ars-results {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(102, 126, 234, 0.3) transparent;
+}
+
+.ars-results::-webkit-scrollbar {
+  width: 5px;
+}
+
+.ars-results::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ars-results::-webkit-scrollbar-thumb {
+  background: rgba(102, 126, 234, 0.3);
+  border-radius: 3px;
+}
+
+/* ── 結果カード ── */
+.ars-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  transition: background 0.2s, border-color 0.2s, transform 0.15s;
+  animation: ars-card-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.ars-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(102, 126, 234, 0.3);
+  transform: translateY(-1px);
+}
+
+@keyframes ars-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── カードヘッダー ── */
+.ars-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.ars-rank {
+  font-size: 11px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.35);
+  min-width: 24px;
+}
+
+.ars-score-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  min-width: 42px;
+  text-align: center;
+}
+
+.ars-score-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── タイトル・URL ── */
+.ars-card-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8ab4f8;
+  text-decoration: none;
+  line-height: 1.4;
+  margin-bottom: 4px;
+  transition: color 0.15s;
+}
+
+.ars-card-title:hover {
+  color: #aecbfa;
+  text-decoration: underline;
+}
+
+.ars-card-url {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 8px;
+}
+
+/* ── ゲージ ── */
+.ars-card-gauges {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.ars-gauge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ars-gauge-label {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.5);
+  min-width: 32px;
+}
+
+.ars-gauge-bar {
+  flex: 1;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.ars-gauge-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ars-gauge-value {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.4);
+  min-width: 28px;
+  text-align: right;
+}
+
+/* ── 判定理由 ── */
+.ars-reasons {
+  margin-top: 4px;
+}
+
+.ars-reasons summary {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ars-reasons summary::before {
+  content: '▶';
+  font-size: 8px;
+  transition: transform 0.2s;
+}
+
+.ars-reasons[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.ars-reasons summary:hover {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.ars-reasons ul {
+  margin: 6px 0 0;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  list-style: none;
+}
+
+.ars-reasons li {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 2px 0;
+  line-height: 1.5;
+}
+
+.ars-reasons li::before {
+  content: '・';
+  color: #667eea;
+}
+
+/* ── フッター ── */
+.ars-panel-footer {
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.ars-footer-text {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+/* ── トグルボタン ── */
+.ars-toggle-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  z-index: 999998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.ars-toggle-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 24px rgba(102, 126, 234, 0.6);
+}
+
+/* ── Google検索結果幅調整 ── */
+#ars-panel:not(.ars-panel-hidden) ~ #rcnt,
+body:has(#ars-panel:not(.ars-panel-hidden)) #rcnt {
+  margin-right: 390px;
+  transition: margin-right 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}

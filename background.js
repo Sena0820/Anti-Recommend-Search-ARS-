@@ -56,6 +56,11 @@ const SEO_WORDS = [
     { word: '評判', weight: 1 }, { word: '必見', weight: 1.5 },
     { word: '完全ガイド', weight: 2 }, { word: '保存版', weight: 1.5 },
     { word: '決定版', weight: 2 }, { word: '選', weight: 0.5 },
+    // 公式・オフィシャル系（重ペナルティ）
+    { word: '公式サイト', weight: 5 }, { word: '公式ページ', weight: 5 },
+    { word: '公式ショップ', weight: 5 }, { word: '公式ストア', weight: 5 },
+    { word: '公式', weight: 3 }, { word: 'オフィシャル', weight: 4 },
+    { word: 'official', weight: 4 }, { word: '公式通販', weight: 5 },
 ];
 
 const PERSONAL_WORDS = [
@@ -77,15 +82,48 @@ const AFFILIATE_PATTERNS = [
 
 const BLACKLIST_DOMAINS = [
     'amazon.co.jp', 'amazon.com', 'rakuten.co.jp', 'rakuten.com',
-    'wikipedia.org', 'note.com', 'qiita.com', 'zenn.dev',
-    'yahoo.co.jp', 'yahoo.com', 'kakaku.com', 'tabelog.com',
-    'hotpepper.jp', 'gnavi.co.jp', 'retty.me', 'mynavi.jp',
-    'rikunabi.com', 'doda.jp', 'nikkei.com', 'asahi.com',
-    'mainichi.jp', 'yomiuri.co.jp', 'sankei.com', 'nhk.or.jp',
-    'livedoor.com', 'fc2.com', 'hatena.ne.jp',
+    'mercari.com', 'zozo.jp', 'shopping.yahoo.co.jp', 'qoo10.jp',
+    'wikipedia.org', 'wikiwand.com', 'weblio.jp', 'kotobank.jp',
+    'note.com', 'qiita.com', 'zenn.dev', 'teratail.com',
+    'yahoo.co.jp', 'yahoo.com', 'msn.com',
+    'kakaku.com', 'cosme.net', 'mybest.com', 'the360.life', 'rentry.jp',
+    'tabelog.com', 'hotpepper.jp', 'gnavi.co.jp', 'retty.me',
+    'hitosara.com', 'ubereats.com', 'demae-can.com',
+    'jalan.net', 'booking.com', 'trivago.jp', 'ikyu.com',
+    'expedia.co.jp', 'agoda.com', 'hotels.com', 'airbnb.jp',
+    'jtb.co.jp', 'his-j.com', 'rurubu.travel',
+    'suumo.jp', 'homes.co.jp', 'athome.co.jp', 'chintai.net',
+    'mynavi.jp', 'rikunabi.com', 'doda.jp', 'en-japan.com',
+    'type.jp', 'indeed.com', 'wantedly.com',
+    'nikkei.com', 'asahi.com', 'mainichi.jp', 'yomiuri.co.jp',
+    'sankei.com', 'nhk.or.jp', 'itmedia.co.jp', 'gizmodo.jp',
+    'gigazine.net', 'j-cast.com', 'oricon.co.jp', 'prtimes.jp',
+    'president.jp', 'diamond.jp', 'toyokeizai.net',
+    'livedoor.com', 'naver.jp', 'matomame.jp',
     'twitter.com', 'x.com', 'facebook.com', 'instagram.com',
     'youtube.com', 'tiktok.com', 'linkedin.com', 'pinterest.com',
-    'cookpad.com', 'mercari.com', 'zozo.jp',
+    'ameblo.jp', 'fc2.com', 'hatena.ne.jp', 'hatenablog.com',
+    'hatenablog.jp', 'seesaa.net', 'exblog.jp',
+    'cookpad.com', 'delishkitchen.tv', 'kurashiru.com',
+    'hotpepper-beauty.com', 'dmm.com', 'nifty.com',
+    'biglobe.ne.jp', 'goo.ne.jp', 'excite.co.jp',
+];
+
+const COMMERCIAL_PATH_PATTERNS = [
+    /\/(?:shop|store|product|item|buy|cart|checkout|order)/i,
+    /\/(?:booking|reserve|reservation|plan|yoyaku)/i,
+    /\/(?:price|pricing|campaign|sale|coupon|discount)/i,
+    /\/(?:lp|landing|promo|offer|deal)/i,
+    /\/(?:compare|hikaku|ranking|osusume)/i,
+];
+
+const COMMERCIAL_DOMAIN_KEYWORDS = [
+    'shop', 'store', 'mall', 'buy', 'market',
+    'hotel', 'travel', 'tour', 'booking', 'reserve',
+    'navi', 'guide', 'hikaku', 'compare', 'search',
+    'job', 'career', 'recruit', 'agent',
+    'news', 'media', 'press', 'times',
+    'clinic', 'salon', 'beauty', 'estate', 'fudosan',
 ];
 
 function extractDomain(url) {
@@ -128,9 +166,22 @@ function analyzeResultInBackground(result, html, strength) {
     // ブランドスコア
     let brandScore = 0;
     const domain = extractDomain(result.url);
-    if (/\.co\.jp$|\.or\.jp$|\.ne\.jp$|\.go\.jp$/.test(domain)) brandScore += 1;
+    if (/\.co\.jp$|\.or\.jp$|\.ne\.jp$|\.go\.jp$|\.ac\.jp$/.test(domain)) brandScore += 1;
+
+    // ドメイン名に商業キーワード
+    for (const kw of COMMERCIAL_DOMAIN_KEYWORDS) {
+        if (domain.includes(kw)) { brandScore += 2; break; }
+    }
+
+    // URLパスに商業パターン
+    for (const pattern of COMMERCIAL_PATH_PATTERNS) {
+        if (pattern.test(result.url)) { brandScore += 2; break; }
+    }
+
     if (/プライバシーポリシー|privacy.?policy/i.test(html)) brandScore += 0.5;
     if (/会社概要|企業情報|corporate/i.test(html)) brandScore += 1;
+    if (/特定商取引法|特商法|運営会社/i.test(html)) brandScore += 2;
+    if (/広告掲載|スポンサー|提供元|PR記事|タイアップ/i.test(html)) brandScore += 2;
 
     // Rank Penalty
     const rankPenalty = Math.max(0, 10 - result.rank);
@@ -176,11 +227,20 @@ async function handleAnalyze(data) {
     const { results } = data;
 
     // 設定を取得
-    const settings = await chrome.storage.sync.get(['filterStrength']);
+    const settings = await chrome.storage.sync.get(['filterStrength', 'customBlacklist']);
     const strength = settings.filterStrength || 'medium';
+    const customBL = settings.customBlacklist || [];
+
+    // ブラックリスト結合
+    const effectiveBlacklist = [...BLACKLIST_DOMAINS, ...customBL];
+
+    function isEffectiveBlacklisted(url) {
+        const domain = extractDomain(url);
+        return effectiveBlacklist.some(bl => domain === bl || domain.endsWith('.' + bl));
+    }
 
     // ブラックリスト除外
-    const filtered = results.filter(r => !isBlacklisted(r.url));
+    const filtered = results.filter(r => !isEffectiveBlacklisted(r.url));
 
     // 並列でページ取得（上位20件、パフォーマンスのため）
     const urlsToFetch = filtered.slice(0, 20).map(r => r.url);

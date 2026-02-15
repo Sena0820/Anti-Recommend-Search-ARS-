@@ -5,41 +5,55 @@
 const ARS = (() => {
     // ── ブラックリストドメイン ──
     const BLACKLIST_DOMAINS = [
-        'amazon.co.jp', 'amazon.com',
-        'rakuten.co.jp', 'rakuten.com',
-        'wikipedia.org',
-        'note.com',
-        'qiita.com',
-        'zenn.dev',
-        'yahoo.co.jp', 'yahoo.com',
-        'kakaku.com',
-        'tabelog.com',
-        'hotpepper.jp',
-        'gnavi.co.jp',
-        'retty.me',
-        'mynavi.jp',
-        'rikunabi.com',
-        'doda.jp',
-        'nikkei.com',
-        'asahi.com',
-        'mainichi.jp',
-        'yomiuri.co.jp',
-        'sankei.com',
-        'nhk.or.jp',
-        'livedoor.com',
-        'fc2.com',
-        'hatena.ne.jp',
-        'twitter.com', 'x.com',
-        'facebook.com',
-        'instagram.com',
-        'youtube.com',
-        'tiktok.com',
-        'linkedin.com',
-        'pinterest.com',
-        'cookpad.com',
-        'mercari.com',
-        'zozo.jp',
-        '価格.com',
+        // EC・ショッピング
+        'amazon.co.jp', 'amazon.com', 'rakuten.co.jp', 'rakuten.com',
+        'mercari.com', 'zozo.jp', 'shopping.yahoo.co.jp', 'paypaymall.yahoo.co.jp',
+        'store.line.me', 'qoo10.jp', 'au-commerce.jp',
+        // 百科事典・Wiki
+        'wikipedia.org', 'wikiwand.com', 'weblio.jp', 'kotobank.jp',
+        // テック・開発者向け大手
+        'note.com', 'qiita.com', 'zenn.dev', 'teratail.com',
+        // ポータル・検索
+        'yahoo.co.jp', 'yahoo.com', 'msn.com', 'bing.com',
+        // 価格比較・口コミ
+        'kakaku.com', 'cosme.net', 'mybest.com', 'the360.life',
+        'rentry.jp', 'roomclip.jp',
+        // グルメ・飲食
+        'tabelog.com', 'hotpepper.jp', 'gnavi.co.jp', 'retty.me',
+        'hitosara.com', 'yelp.co.jp', 'ubereats.com', 'demae-can.com',
+        // 旅行・宿泊
+        'jalan.net', 'booking.com', 'trivago.jp', 'ikyu.com',
+        'travel.rakuten.co.jp', 'expedia.co.jp', 'agoda.com',
+        'hotels.com', 'airbnb.jp', 'jtb.co.jp', 'his-j.com',
+        'rurubu.travel', 'yahoo-travel.jp',
+        // 不動産・住宅
+        'suumo.jp', 'homes.co.jp', 'athome.co.jp', 'chintai.net',
+        // 求人・転職
+        'mynavi.jp', 'rikunabi.com', 'doda.jp', 'en-japan.com',
+        'type.jp', 'indeed.com', 'wantedly.com', 'green-japan.com',
+        // ニュース・メディア
+        'nikkei.com', 'asahi.com', 'mainichi.jp', 'yomiuri.co.jp',
+        'sankei.com', 'nhk.or.jp', 'itmedia.co.jp', 'gizmodo.jp',
+        'gigazine.net', 'huffingtonpost.jp', 'buzzfeed.com',
+        'withnews.jp', 'j-cast.com', 'oricon.co.jp', 'natalie.mu',
+        'prtimes.jp', 'president.jp', 'diamond.jp', 'toyokeizai.net',
+        // まとめ系
+        'livedoor.com', 'naver.jp', 'matomame.jp',
+        // SNS
+        'twitter.com', 'x.com', 'facebook.com', 'instagram.com',
+        'youtube.com', 'tiktok.com', 'linkedin.com', 'pinterest.com',
+        'threads.net', 'reddit.com',
+        // ブログプラットフォーム（大手）
+        'ameblo.jp', 'fc2.com', 'hatena.ne.jp', 'hatenablog.com',
+        'hatenablog.jp', 'seesaa.net', 'blog.jp', 'livedoor.blog',
+        'exblog.jp',
+        // レシピ・生活
+        'cookpad.com', 'delishkitchen.tv', 'kurashiru.com',
+        // 健康・美容
+        'cosme.net', 'hotpepper-beauty.com', 'beauty.yahoo.co.jp',
+        // その他大手
+        'dmm.com', 'nifty.com', 'biglobe.ne.jp', 'so-net.ne.jp',
+        'ocn.ne.jp', 'goo.ne.jp', 'excite.co.jp',
     ];
 
     // ── SEOワード（重み付き）──
@@ -61,6 +75,16 @@ const ARS = (() => {
         { word: '決定版', weight: 2 },
         { word: '〇選', weight: 2 },
         { word: '選', weight: 0.5 },
+        // 公式・オフィシャル系（重ペナルティ）
+        { word: '公式サイト', weight: 5 },
+        { word: '公式ページ', weight: 5 },
+        { word: '公式ショップ', weight: 5 },
+        { word: '公式ストア', weight: 5 },
+        { word: '公式ブログ', weight: 3 },
+        { word: '公式', weight: 3 },
+        { word: 'オフィシャル', weight: 4 },
+        { word: 'official', weight: 4 },
+        { word: '公式通販', weight: 5 },
     ];
 
     // ── 一人称ワード（個人性判定）──
@@ -102,6 +126,28 @@ const ARS = (() => {
         /\.or\.jp$/,
         /\.ne\.jp$/,
         /\.go\.jp$/,
+        /\.ac\.jp$/,
+    ];
+
+    // ── 商業URLパスパターン（予約・購入・商品ページ等）──
+    const COMMERCIAL_PATH_PATTERNS = [
+        /\/(?:shop|store|product|item|buy|cart|checkout|order)/i,
+        /\/(?:booking|reserve|reservation|plan|yoyaku)/i,
+        /\/(?:price|pricing|campaign|sale|coupon|discount)/i,
+        /\/(?:lp|landing|promo|offer|deal)/i,
+        /\/(?:compare|hikaku|ranking|osusume)/i,
+        /\/(?:ad|sponsor|pr)\//i,
+    ];
+
+    // ── ドメイン名に含まれる商業キーワード ──
+    const COMMERCIAL_DOMAIN_KEYWORDS = [
+        'shop', 'store', 'mall', 'buy', 'market',
+        'hotel', 'travel', 'tour', 'booking', 'reserve',
+        'navi', 'guide', 'hikaku', 'compare', 'search',
+        'job', 'career', 'recruit', 'agent',
+        'news', 'media', 'press', 'times',
+        'clinic', 'salon', 'beauty',
+        'estate', 'realty', 'fudosan',
     ];
 
     // ────────────────────────────────
@@ -177,6 +223,26 @@ const ARS = (() => {
             }
         }
 
+        // ドメイン名に商業キーワードが含まれる
+        for (const kw of COMMERCIAL_DOMAIN_KEYWORDS) {
+            if (domain.includes(kw)) {
+                score += 2;
+                break;
+            }
+        }
+
+        // サブドメインが多い（大規模サイトの傾向）
+        const subdomainCount = domain.split('.').length;
+        if (subdomainCount >= 4) score += 1;
+
+        // URLパスに商業パターン
+        for (const pattern of COMMERCIAL_PATH_PATTERNS) {
+            if (pattern.test(url)) {
+                score += 2;
+                break;
+            }
+        }
+
         if (html) {
             // プライバシーポリシーリンクの存在
             if (/プライバシーポリシー|privacy.?policy/i.test(html)) {
@@ -185,6 +251,14 @@ const ARS = (() => {
             // 会社概要の存在
             if (/会社概要|企業情報|corporate/i.test(html)) {
                 score += 1;
+            }
+            // 利用規約・特商法表記（商業サイトの強い指標）
+            if (/特定商取引法|特商法|運営会社/i.test(html)) {
+                score += 2;
+            }
+            // 広告・スポンサー表記
+            if (/広告掲載|スポンサー|提供元|PR記事|タイアップ/i.test(html)) {
+                score += 2;
             }
         }
 
@@ -275,9 +349,23 @@ const ARS = (() => {
         };
     }
 
+    // ────────────────────────────────
+    // Dynamic Blacklist Addition
+    // ────────────────────────────────
+    function addBlacklist(domains) {
+        if (Array.isArray(domains)) {
+            domains.forEach(d => {
+                if (d && !BLACKLIST_DOMAINS.includes(d)) {
+                    BLACKLIST_DOMAINS.push(d);
+                }
+            });
+        }
+    }
+
     // Public API
     return {
         isBlacklisted,
+        addBlacklist,
         calcSeoScore,
         calcAdScore,
         calcBrandScore,

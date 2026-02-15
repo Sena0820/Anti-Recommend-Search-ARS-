@@ -272,17 +272,19 @@
     }
 
     // ── ローカル解析 ──
-    function analyzeLocally(results) {
+    async function analyzeLocally(results) {
         if (typeof ARS === 'undefined') {
             console.warn('[ARS] ARS filter engine not loaded');
-            return results.map(r => ({
-                ...r,
-                antiScore: 0,
-                personalIndex: 0,
-                commercialIndex: 0,
-                reasons: ['フィルタエンジン未読込'],
-            }));
+            return results;
         }
+
+        // カスタムブラックリスト読み込み
+        try {
+            const settings = await chrome.storage.sync.get(['customBlacklist']);
+            if (settings.customBlacklist && Array.isArray(settings.customBlacklist)) {
+                ARS.addBlacklist(settings.customBlacklist);
+            }
+        } catch (e) { console.warn(e); }
 
         const analyzed = results
             .filter(r => !ARS.isBlacklisted(r.url))
@@ -364,12 +366,12 @@
             } else {
                 // フォールバック：ローカル解析
                 console.log('[ARS] Background returned empty, using local analysis');
-                const local = analyzeLocally(googleResults);
+                const local = await analyzeLocally(googleResults);
                 renderResults(local);
             }
         } catch (error) {
             console.warn('[ARS] Background worker error, falling back to local:', error);
-            const local = analyzeLocally(googleResults);
+            const local = await analyzeLocally(googleResults);
             renderResults(local);
         }
     }

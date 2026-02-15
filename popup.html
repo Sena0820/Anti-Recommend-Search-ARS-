@@ -47,9 +47,14 @@
         </div>
 
         <div class="popup-section">
-            <label class="popup-label">ブラックリスト管理</label>
+            <label class="popup-label">カスタムブラックリスト</label>
+            <div class="popup-input-group">
+                <input type="text" id="bl-domain-input" placeholder="例: example.com" spellcheck="false">
+                <button id="bl-add-btn" class="btn-icon" title="追加">＋</button>
+            </div>
+            <div id="bl-list" class="bl-domain-list"></div>
             <p class="popup-hint">
-                Amazon, 楽天, Wikipedia, 大手ニュースサイト等を自動除外します。
+                ※ Amazon, 楽天, じゃらん等90+の大手サイトは組み込みで自動除外済み
             </p>
         </div>
 
